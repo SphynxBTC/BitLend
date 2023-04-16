@@ -95,9 +95,27 @@
     )
   )
 )
+
+;; (define-public (flash-loan (amount))
+;;   (let (
+;;       (balance (map-get balance-map (tx-sender)))
+;;     )
+;;     (if (< (get balance 0) amount)
+;;       (err "Insufficient funds for flash loan.")
+;;       (begin
+;;         (set balance-map
+;;           (update balance (- (get balance 0) amount) 0))
+;;         (call (get-contract-address "flash-loan-contract") "execute-flash-loan" amount)
+;;         (set balance-map
+;;             (update balance (- (get balance 0) amount) 0))
+;;         (call (get-contract-address "flash-loan-contract") "execute-flash-loan" amount)
+;;         (set balance-map
+;;             (update balance (+ (get balance 0) amount) 0))
+;;         (ok "Flash loan successfully executed.")))
+;;     (err "Insufficient funds for flash loan.")))
+
 ;; read only functions
 ;;
 
 ;; private functions
 ;;
-
