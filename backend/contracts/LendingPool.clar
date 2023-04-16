@@ -39,6 +39,7 @@
 ;; data vars
 ;;
 (define-data-var interest-rate uint u0)
+(define-data-var BTC-price uint u300)
 
 ;; data maps
 ;;
@@ -47,15 +48,16 @@
 (define-map collateral-map principal uint)
 
 
-(define-public (deposit (token-contract <ft-trait>) (amount uint) )
+
+(define-public (deposit (xBTC-contract <ft-trait>) (amount uint))
   (let
     (
       (sender tx-sender)
-      (token-amount (unwrap-panic (contract-call? token-contract get-balance tx-sender)))
+      (xBTC-amount (unwrap-panic (contract-call? xBTC-contract get-balance tx-sender)))
       (balance (unwrap-panic (map-get? balance-map tx-sender)))
     )
-    (asserts! (< token-amount amount) (err "Insufficient token balance to deposit."))
-    (unwrap-panic (transfer-ft token-contract amount tx-sender (as-contract tx-sender)))
+    (asserts! (< xBTC-amount amount) (err "Insufficient xBTC balance to deposit."))
+    (unwrap-panic (transfer-ft xBTC-contract amount tx-sender (as-contract tx-sender)))
     (map-set balance-map tx-sender (+ balance amount))
     (ok true)
   )
