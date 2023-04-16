@@ -69,13 +69,13 @@
 
 
 
-(define-public (withdraw (token-contract <ft-trait>) (amount uint) )
+(define-public (withdraw (xBTC-contract <ft-trait>) (amount uint) )
   (let 
     (
       (balance (unwrap-panic (map-get? balance-map tx-sender))))
     (if (> balance u0)
       (begin
-        (unwrap-panic (transfer-ft token-contract amount (as-contract tx-sender) tx-sender))
+        (unwrap-panic (transfer-ft xBTC-contract amount (as-contract tx-sender) tx-sender))
         (map-set balance-map tx-sender u0)
         (ok true)
       )
@@ -86,30 +86,26 @@
 
 
 
-(define-public (borrow (token-contract <ft-trait>) (collateral-amount uint) (borrowed-amount uint))
+(define-public (borrow (USD-contract <ft-trait>) (borrowed-amount uint))
   (let (
-      (collateral-balance (unwrap-panic (map-get? collateral-map tx-sender)))
+      (usd-balance (* (unwrap-panic (map-get? balance-map tx-sender)) (var-get BTC-price)))
       (borrowed-balance (unwrap-panic (map-get? borrowed-map tx-sender)))
-      (max-borrowed-amount (* collateral-balance (var-get interest-rate)))
+      (max-borrowed-amount (* (* borrowed-amount (var-get interest-rate)) (var-get BTC-price)))
     )
     (asserts! 
-      (< collateral-amount max-borrowed-amount) 
-      (err "Insufficient collateral to borrow the requested amount.")
+      (< usd-balance max-borrowed-amount) 
+      (err "Insufficient balance to borrow the requested amount.")
     )
-    (asserts! 
-      (> collateral-amount borrowed-balance) 
-      (err "You don't have enough collateral to borrow this amount.")
-    )
-    (map-set balance-map tx-sender (- collateral-balance collateral-amount))
+    (map-set balance-map tx-sender (- usd-balance borrowed-amount))
     (map-set borrowed-map tx-sender (+ borrowed-balance borrowed-amount))
-    (unwrap-panic (transfer-ft token-contract borrowed-amount (as-contract tx-sender) tx-sender))
+    (unwrap-panic (transfer-ft USD-contract borrowed-amount (as-contract tx-sender) tx-sender))
     (ok true)
   )
 )
 
 
 
-(define-public (repay (token-contract <ft-trait>) (repayment-amount uint))
+(define-public (repay (USD-contract <ft-trait>) (repayment-amount uint))
   (let (
       (borrowed-balance (unwrap-panic (map-get? borrowed-map tx-sender)))
       (interest-owed (* borrowed-balance (var-get interest-rate)))
@@ -121,7 +117,11 @@
     )
     (begin
       (map-set borrowed-map tx-sender (- borrowed-balance repayment-amount))
-      (unwrap-panic (transfer-ft token-contract (- repayment-amount interest-owed) (as-contract tx-sender) tx-sender))
+      (unwrap-panic (
+        transfer-ft USD-contract (
+          - repayment-amount interest-owed) (as-contract tx-sender) tx-sender
+        )
+      )
       (ok true)
     )
   )
