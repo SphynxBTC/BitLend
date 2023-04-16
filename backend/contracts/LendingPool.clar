@@ -70,11 +70,15 @@
 
 
 (define-public (withdraw (token-contract <ft-trait>) (amount uint) )
-  (let ((balance (map-get? balance-map tx-sender)))
-    (if (> balance 0)
+  (let 
+    (
+      (balance (unwrap-panic (map-get? balance-map tx-sender))))
+    (if (> balance u0)
       (begin
-        (transfer-ft token-contract tx-sender amount)
-        (map-set balance-map tx-sender 0))
+        (unwrap-panic (transfer-ft token-contract amount tx-sender))
+        (map-set balance-map tx-sender u0)
+        (ok true)
+      )
       (err "You have no deposited assets to withdraw.")
     )
   )
@@ -82,11 +86,11 @@
 
 
 
-(define-public (borrow (token-contract <ft-trait>) (collateral-amount uint))
+(define-public (borrow (token-contract <ft-trait>) (collateral-amount uint) (borrowed-amount uint))
   (let (
-      (collateral-balance (map-get? collateral-map tx-sender))
-      (borrowed-balance (map-get? borrowed-map tx-sender))
-      (max-borrowed-amount (* collateral-balance interest-rate))
+      (collateral-balance (unwrap-panic (map-get? collateral-map tx-sender)))
+      (borrowed-balance (unwrap-panic (map-get? borrowed-map tx-sender)))
+      (max-borrowed-amount (* collateral-balance (var-get interest-rate)))
     )
     (asserts! 
       (< collateral-amount max-borrowed-amount) 
@@ -98,7 +102,8 @@
     )
     (map-set balance-map tx-sender (- collateral-balance collateral-amount))
     (map-set borrowed-map tx-sender (+ borrowed-balance borrowed-amount))
-    (transfer-ft token-contract borrowed-amount tx-sender)
+    (unwrap-panic (transfer-ft token-contract borrowed-amount tx-sender))
+    (ok true)
   )
 )
 
