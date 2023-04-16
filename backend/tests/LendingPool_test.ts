@@ -20,8 +20,11 @@ Clarinet.test({
 
         // act: perform actions related to the current test
         let block = chain.mineBlock([
+            Tx.contractCall(xUSD, "mint", [types.uint(1000), types.principal(LendingPool)], deployer.address),
+            
             Tx.contractCall(xBTC, "mint", [types.uint(1), types.principal(wallet_1.address)], deployer.address),
             Tx.contractCall(xUSD, "mint", [types.uint(1000), types.principal(wallet_1.address)], deployer.address),
+            
             Tx.contractCall(LendingPool, "deposit", [types.principal(xBTC), types.uint(1)], wallet_1.address)
         ]);
 
