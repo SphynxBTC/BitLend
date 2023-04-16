@@ -1,0 +1,110 @@
+.boxWrapper {
+  width: 100%;
+}
+
+.center {
+  text-align: center;
+}
+
+.container {
+  padding: 1rem 0;
+  min-height: 100vh;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.disconnectBtn {
+  background-color: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 1px solid #e7e8ec;
+}
+
+.header {
+  margin: 10px 16px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.info {
+  position: absolute;
+  border-radius: 4px;
+  padding: 4px 8px;
+  letter-spacing: 0.009375rem;
+  line-height: 1rem;
+  font-size: 0.75rem;
+  color: rgb(0, 39, 84);
+  background: rgb(229, 239, 251);
+  width: calc(100% - 42px);
+  top: 46px;
+  margin: 0 21px;
+  display: flex;
+  align-items: center;
+}
+
+.infoIcon {
+  width: 18px;
+  height: 18px;
+  margin-right: 4px;
+}
+
+.largeCol {
+  width: 100px !important;
+}
+
+.listHeader {
+  color: #707484;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.listMessage {
+  letter-spacing: 0.009375rem;
+  line-height: 143%;
+  font-size: 0.875rem;
+  color: rgb(98, 103, 123);
+  padding: 0 24px 21px;
+}
+
+.listRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  border-bottom: 1px solid #e7e8ec;
+  padding: 10px 24px 10px 18px;
+}
+
+.listRow > div {
+  width: 60px;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-wrap: wrap;
+}
+
+.logo {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.network {
+  background-color: #323547;
+  color: #fdfdfd;
+  padding: 6px 12px;
+  border-radius: 25px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-right: 12px; 
+}
+
+.smallCol {
+  width: 40px !important;
+}
+
+@media (min-width: 940px) {
+  .boxWrapper {
+    display: flex;
+  }
+}

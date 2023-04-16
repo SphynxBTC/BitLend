@@ -1,0 +1,57 @@
+.actionBtn {
+  background-color: #323547;
+  color: #fdfdfd;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-weight: 500;
+  line-height: 1.5rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.assetContainer {
+  flex-wrap: nowrap !important;
+}
+
+.assetContainer > div {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  font-weight: 600;
+}
+
+.assetContainer img {
+  margin-right: 7px;
+  width: 22px;
+  height: 22px;
+}
+
+.center {
+  text-align: center;
+}
+
+.disabled {
+  background-color: #e7e8ec;
+  color: #c0c1cc;
+  cursor: default;
+}
+
+.listRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  border-bottom: 1px solid #e7e8ec;
+  padding: 10px 24px 10px 18px;
+}
+
+.listRow > div {
+  width: 60px;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-wrap: wrap;
+}
+
+.largeCol {
+  width: 100px !important;
+}
