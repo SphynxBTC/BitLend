@@ -51,17 +51,13 @@
   (let
     (
       (sender tx-sender)
-      (token-amount (ft-get-balance tx-sender))
+      (token-amount (unwrap-panic (contract-call? token-contract get-balance tx-sender)))
+      (balance (unwrap-panic (map-get? balance-map tx-sender)))
     )
-    (if (< token-amount amount)
-      (err "Insufficient token balance to deposit.")
-      (begin
-        (transfer-ft token-contract amount tx-sender)
-        (let ((balance (map-get? balance-map tx-sender)))
-          (map-set balance-map tx-sender (+ balance amount))
-        )
-      )
-    )
+    (asserts! (< token-amount amount) (err "Insufficient token balance to deposit."))
+    (unwrap-panic (transfer-ft token-contract amount tx-sender))
+    (map-set balance-map tx-sender (+ balance amount))
+    (ok true)
   )
 )
 
