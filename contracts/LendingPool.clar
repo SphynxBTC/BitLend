@@ -59,6 +59,17 @@
   (contract-call? token-contract transfer amount sender recipient none)
 )
 
+
+(define-public (withdraw (token-contract <ft-trait>) (amount uint) )
+  (let ((balance (map-get? balance-map tx-sender)))
+    (if (> balance 0)
+      (begin
+        (transfer-ft token-contract tx-sender amount)
+        (map-set balance-map tx-sender 0))
+      (err "You have no deposited assets to withdraw.")
+    )
+  )
+)
 ;; read only functions
 ;;
 
