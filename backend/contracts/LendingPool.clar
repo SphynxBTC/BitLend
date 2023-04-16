@@ -57,6 +57,26 @@
     )
   )
 )
+
+(define-public (borrow (token-contract <ft-trait>) (collateral-amount uint))
+  (let (
+      (collateral-balance (map-get? collateral-map tx-sender))
+      (borrowed-balance (map-get? borrowed-map tx-sender))
+      (max-borrowed-amount (* collateral-balance interest-rate))
+    )
+    (asserts! 
+      (< collateral-amount max-borrowed-amount) 
+      (err "Insufficient collateral to borrow the requested amount.")
+    )
+    (asserts! 
+      (> collateral-amount borrowed-balance) 
+      (err "You don't have enough collateral to borrow this amount.")
+    )
+    (map-set balance-map tx-sender (- collateral-balance collateral-amount))
+    (map-set borrowed-map tx-sender (+ borrowed-balance borrowed-amount))
+    (transfer-ft token-contract borrowed-amount tx-sender)
+  )
+)
 ;; read only functions
 ;;
 
