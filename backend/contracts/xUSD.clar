@@ -5,12 +5,12 @@
 (define-constant err-not-token-owner (err u101))
 
 ;; No maximum supply!
-(define-fungible-token clarity-coin)
+(define-fungible-token xusd-coin)
 
 (define-public (transfer (amount uint) (sender principal) (recipient principal) (memo (optional (buff 34))))
 	(begin
 		(asserts! (is-eq tx-sender sender) err-not-token-owner)
-		(try! (ft-transfer? clarity-coin amount sender recipient))
+		(try! (ft-transfer? xusd-coin amount sender recipient))
 		(match memo to-print (print to-print) 0x)
 		(ok true)
 	)
@@ -29,11 +29,11 @@
 )
 
 (define-read-only (get-balance (who principal))
-	(ok (ft-get-balance clarity-coin who))
+	(ok (ft-get-balance xusd-coin who))
 )
 
 (define-read-only (get-total-supply)
-	(ok (ft-get-supply clarity-coin))
+	(ok (ft-get-supply xusd-coin))
 )
 
 (define-read-only (get-token-uri)
@@ -43,6 +43,6 @@
 (define-public (mint (amount uint) (recipient principal))
 	(begin
 		(asserts! (is-eq tx-sender contract-owner) err-owner-only)
-		(ft-mint? clarity-coin amount recipient)
+		(ft-mint? xusd-coin amount recipient)
 	)
 )
