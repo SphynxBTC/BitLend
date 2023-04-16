@@ -21,20 +21,8 @@
 ;;
 (define-map balance-map principal uint)
 (define-map borrowed-map principal uint)
+(define-map collateral-map principal uint)
 
-;; public functions
-;;
-;; (define-public (deposit (amount uint))
-;;   ;; (begin
-;;     (if (<= amount 0)
-;;       (ok "Deposit successful")
-;;       (err "Deposit amount must be greater than zero.")
-;;     )
-;;     (begin 
-;;       (map-set balance-map (tx-sender) (+ (map-get? balance-map) amount))
-;;     )
-;;   ;; )
-;; )
 
 
 (define-public (deposit (amount uint) (token-contract <ft-trait>))
