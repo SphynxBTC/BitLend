@@ -42,9 +42,12 @@
   )
 )
 
+
+
 (define-private (transfer-ft (token-contract <ft-trait>) (amount uint) (sender principal) (recipient principal))
   (contract-call? token-contract transfer amount sender recipient none)
 )
+
 
 
 (define-public (withdraw (token-contract <ft-trait>) (amount uint) )
@@ -57,6 +60,8 @@
     )
   )
 )
+
+
 
 (define-public (borrow (token-contract <ft-trait>) (collateral-amount uint))
   (let (
@@ -78,6 +83,8 @@
   )
 )
 
+
+
 (define-public (repay (token-contract <ft-trait>) (repayment-amount))
   (let (
       (borrowed-balance (map-get? borrowed-map tx-sender))
@@ -95,6 +102,8 @@
     )
   )
 )
+
+
 
 ;; (define-public (flash-loan (amount))
 ;;   (let (
