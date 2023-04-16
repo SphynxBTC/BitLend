@@ -24,8 +24,7 @@
 (define-map collateral-map principal uint)
 
 
-
-(define-public (deposit (amount uint) (token-contract <ft-trait>))
+(define-public (deposit (token-contract <ft-trait>) (amount uint) )
   (let
     (
       (sender tx-sender)
