@@ -109,20 +109,20 @@
 
 
 
-(define-public (repay (token-contract <ft-trait>) (repayment-amount))
+(define-public (repay (token-contract <ft-trait>) (repayment-amount uint))
   (let (
-      (borrowed-balance (map-get? borrowed-map tx-sender))
-      (interest-owed (* (get borrowed-balance 0) interest-rate))
-      (total-owed (+ (get borrowed-balance 0) interest-owed))
+      (borrowed-balance (unwrap-panic (map-get? borrowed-map tx-sender)))
+      (interest-owed (* borrowed-balance (var-get interest-rate)))
+      (total-owed (+ borrowed-balance interest-owed))
     )
     (asserts! 
       (< repayment-amount total-owed)
       (err "Insufficient repayment amount. You must repay the full amount owed.")
     )
     (begin
-      (map-set tx-sender (+ borrowed-balance interest-owed))
-      (map-set borrowed-map tx-sender 0)
-      (transfer-ft tx-sender (- repayment-amount interest-owed))
+      (map-set borrowed-map tx-sender (- borrowed-balance repayment-amount))
+      (unwrap-panic (transfer-ft token-contract (- repayment-amount interest-owed) (as-contract tx-sender) tx-sender))
+      (ok true)
     )
   )
 )
