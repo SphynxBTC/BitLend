@@ -56,6 +56,14 @@
   flex-wrap: wrap;
 }
 
+.listRow button {
+  width: 84px !important;
+}
+
+.button {
+  width: 84px !important;
+}
+
 .smallCol {
   width: 40px !important;
 }

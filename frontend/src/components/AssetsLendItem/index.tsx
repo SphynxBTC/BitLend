@@ -8,9 +8,11 @@ type Asset = {
   balance: number
   apy: string
   isCollateral: boolean
+  onLend: React.MouseEventHandler<HTMLButtonElement>
+  isWithdraw?: boolean
 }
 
-const AssetsLendItem = ({ src, name, balance, apy, isCollateral }: Asset) => {
+const AssetsLendItem = ({ src, name, balance, apy, isCollateral, onLend, isWithdraw }: Asset) => {
   const btnDisabled = balance === 0 ? styles.disabled : ""
   const collateral = isCollateral ? "Yes" : "No"
   const collateralClass = isCollateral ? styles.green : ""
@@ -26,11 +28,15 @@ const AssetsLendItem = ({ src, name, balance, apy, isCollateral }: Asset) => {
         </div>
         <div>{name}</div>
       </div>
-      <div>{balance}</div>
+      <div style={{position: "relative"}}>
+        <div>{balance}</div>
+        {isWithdraw && <div style={{position: "absolute", bottom: "-5px", fontSize: 12, color: "#777"}}>$ {balance * 0.88}</div>}
+      </div>
       <div className={`${styles.smallCol} ${styles.center}`}>{apy}</div>
       <div className={`${styles.center} ${collateralClass}`}>{collateral}</div>
-      <div className={styles.center}>
-        <button className={`${styles.actionBtn} ${btnDisabled}`}>Lend</button>
+      <div className={`${styles.center} ${styles.button}`}>
+        {!isWithdraw && <button className={`${styles.actionBtn} ${btnDisabled}`} onClick={onLend}>Lend</button>}
+        {!!isWithdraw && <button className={`${styles.actionBtn}`}>Withdraw</button>}
       </div>
     </div>
   )
