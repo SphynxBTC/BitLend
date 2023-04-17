@@ -22,7 +22,7 @@
 }
 
 .header {
-  margin: 10px 16px 24px;
+  margin: 10px 16px 8px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -52,6 +52,10 @@
 
 .largeCol {
   width: 100px !important;
+}
+
+.lastCol {
+  width: 84px !important;
 }
 
 .listHeader {
@@ -89,6 +93,11 @@
   font-weight: 700;
 }
 
+.logo img {
+  width: 150px;
+  height: 86px;
+}
+
 .network {
   background-color: #323547;
   color: #fdfdfd;
@@ -99,8 +108,36 @@
   margin-right: 12px; 
 }
 
+.popUpContainer {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: rgba(100, 100, 100, 0.7);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .smallCol {
   width: 40px !important;
+}
+
+.survey a {
+  background-color:limegreen;
+  padding: 12px 16px;
+  font-size: 18px;
+  color: white;
+  cursor: pointer;
+  text-align: center;
+  border-radius: 10px;
+  display: block;
+  margin: 0 14px;
+}
+
+.survey a:hover {
+  background-color:mediumseagreen;
 }
 
 @media (min-width: 940px) {

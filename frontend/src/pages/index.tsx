@@ -1,21 +1,33 @@
 import { useEffect, useState } from 'react'
 import Head from 'next/head'
+import Image, { StaticImageData } from 'next/image'
 import MainConnect from "@components/MainConnect"
 import AssetsGroup from "@components/AssetsGroup"
 import AssetsLendItem from "@components/AssetsLendItem"
 import AssetsBorrowItem from "@components/AssetsBorrowItem"
+import LendPopUp from "@components/Lend"
 import { userSession } from '@utils/userSession'
 import getSTXBalance from "@utils/getSTXBalance"
 import getBTCBalance from "@utils/getBTCBalance"
 import styles from '@styles/Home.module.css'
 import bitcoinLogo from '@assets/bitcoin_logo.webp'
 import stacksLogo from '@assets/stacks_logo.webp'
+import BitLendLogo from '@assets/logo.jpg'
 
+const initState = {
+  name: "",
+  src: bitcoinLogo,
+  balance: 0,
+  apy: "",
+  isCollateral: false,
+  valueDollar: 0
+}
 export default function Home() {
   const [userIsConnected, setUserIsConnected] = useState(false)
   const [stxBalance, setStxBalance] = useState(0)
   const [btcBalance, setBtcBalance] = useState(0)
   const [network, setNetwork] = useState("")
+  const [showLend, setShowLend] = useState(initState)
 
   useEffect(() => {
     const net = localStorage.getItem("network")
@@ -68,7 +80,14 @@ export default function Home() {
       </Head>
       <div className={styles.container}>
         <header className={styles.header}>
-          <div className={styles.logo}>BitLend</div>
+          <div className={styles.logo}>
+            <div>
+              <Image
+                src={BitLendLogo}
+                alt="BitLend"
+              />
+            </div>
+          </div>
           <div>
             {userIsConnected && (
               <>
@@ -78,12 +97,33 @@ export default function Home() {
             )}
           </div>
         </header>
+        <div className={styles.survey}>
+          <a href="https://blocksurvey.io/survey/p/59b98bd3-1fc7-4e3d-ac3d-92b4d1eb9d40/r/o" target="_blank">Complete this brief survey to be added to the waitlist of our beta launch</a>
+        </div>
         {!userIsConnected && <MainConnect />}
         {userIsConnected &&
           <main className={styles.main}>
             <div className={styles.boxWrapper}>
               <AssetsGroup title="Loaned Assets">
                 <div className={styles.listMessage}>Nothing loaned yet.</div>
+                {false && <>
+                  <div className={`${styles.listRow} ${styles.listHeader}`}>
+                    <div>Assets</div>
+                    <div>Balance</div>
+                    <div className={`${styles.smallCol} ${styles.center}`}>APY</div>
+                    <div>Collateral</div>
+                    <div className={styles.lastCol} />
+                  </div>
+                  <AssetsLendItem
+                    name="STX"
+                    src={stacksLogo}
+                    balance={stxBalance}
+                    apy="2%"
+                    isCollateral={true}
+                    onLend={() => {}}
+                    isWithdraw={true}
+                  />
+                </>}
               </AssetsGroup>
               <AssetsGroup title="Borrowed Assets">
                 <div className={styles.listMessage}>Nothing borrowed yet.</div>
@@ -105,13 +145,29 @@ export default function Home() {
                     balance={btcBalance}
                     apy="5%"
                     isCollateral={false}
-                  />
+                    onLend={() => setShowLend({
+                      name: "BTC",
+                      src: bitcoinLogo,
+                      balance: btcBalance,
+                      apy: "5%",
+                      isCollateral: false,
+                      valueDollar: 30000
+                    })}
+                    />
                   <AssetsLendItem
                     name="STX"
                     src={stacksLogo}
                     balance={stxBalance}
                     apy="2%"
                     isCollateral={true}
+                    onLend={() => setShowLend({
+                      name: "STX",
+                      src: stacksLogo,
+                      balance: stxBalance,
+                      apy: "2%",
+                      isCollateral: true,
+                      valueDollar: 0.87
+                    })}
                   />
                 </>
               </AssetsGroup>
@@ -125,30 +181,46 @@ export default function Home() {
                       To borrow you need to supply an asset to be used as collateral.
                     </div>
                   </div>
-                    <div className={`${styles.listRow} ${styles.listHeader}`}>
-                      <div>Assets</div>
-                      <div>Available</div>
-                      <div className={`${styles.largeCol} ${styles.center}`}>Interest (APR)</div>
-                      <div className={styles.lastCol} />
-                    </div>
-                    <AssetsBorrowItem
-                      name="sBTC"
-                      src={bitcoinLogo}
-                      balance={0}
-                      apr="2%"
-                    />
-                    <AssetsBorrowItem
-                      name="STX"
-                      src={stacksLogo}
-                      balance={0}
-                      apr="3%"
-                    />
-                  </>
+                  <div className={`${styles.listRow} ${styles.listHeader}`}>
+                    <div>Assets</div>
+                    <div>Available</div>
+                    <div className={`${styles.largeCol} ${styles.center}`}>Interest (APR)</div>
+                    <div className={styles.lastCol} />
+                  </div>
+                  <AssetsBorrowItem
+                    name="sBTC"
+                    src={bitcoinLogo}
+                    balance={0}
+                    apr="2%"
+                  />
+                  <AssetsBorrowItem
+                    name="STX"
+                    src={stacksLogo}
+                    balance={0}
+                    apr="3%"
+                  />
+                </>
               </AssetsGroup>
             </div>
           </main>
         } 
      </div>
+     {showLend?.name &&
+      <div className={styles.popUpContainer}>
+          <LendPopUp
+            name={showLend.name}
+            src={showLend.src}
+            balance={showLend.balance}
+            apy={showLend.apy}
+            isCollateral={showLend.isCollateral}
+            valueDollar={showLend.valueDollar}
+            onClose={() => setShowLend(initState)}
+            onLend={(value: number) => {
+              setShowLend(initState)
+            }}
+            />
+        </div>
+      }
     </>
   )
 }
