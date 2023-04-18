@@ -1,10 +1,12 @@
 import { showConnect } from '@stacks/connect'
 import { userSession } from '@utils/userSession'
+import reload from "@utils/reload"
 
-const appName = 'BitLend'; // shown in wallet pop-up
-const appIcon = '@assets/stacks.webp'; // shown in wallet pop-up
 
 const authenticate = () => {
+  const appName = 'BitLend'; // shown in wallet pop-up
+  const appIcon = `${window.location.origin}/logo.jpg`; // shown in wallet pop-up
+  
   showConnect({
     appDetails: {
       name: appName,
@@ -12,7 +14,7 @@ const authenticate = () => {
     },
     userSession,
     onFinish: () => {
-      window.location.reload() // reload when user confirms pop-up
+      reload() // reload when user confirms pop-up
     },
     onCancel: () => {},
   })
