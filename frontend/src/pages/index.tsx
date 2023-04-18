@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react'
 import Head from 'next/head'
-import Image, { StaticImageData } from 'next/image'
+import Image from 'next/image'
 import MainConnect from "@components/MainConnect"
 import AssetsGroup from "@components/AssetsGroup"
 import AssetsLendItem from "@components/AssetsLendItem"
 import AssetsBorrowItem from "@components/AssetsBorrowItem"
 import LendPopUp from "@components/Lend"
+import { InfoIcon } from '@components/Svg'
 import { userSession } from '@utils/userSession'
 import getSTXBalance from "@utils/getSTXBalance"
 import getBTCBalance from "@utils/getBTCBalance"
+import reload from "@utils/reload"
 import styles from '@styles/Home.module.css'
 import bitcoinLogo from '@assets/bitcoin_logo.webp'
 import stacksLogo from '@assets/stacks_logo.webp'
@@ -28,6 +30,7 @@ export default function Home() {
   const [btcBalance, setBtcBalance] = useState(0)
   const [network, setNetwork] = useState("")
   const [showLend, setShowLend] = useState(initState)
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     const net = localStorage.getItem("network")
@@ -42,6 +45,7 @@ export default function Home() {
     setUserIsConnected(isUserSignedIn)
 
     if (isUserSignedIn) {
+      setIsLoading(true)
       getBalances()
     }
   }, [])
@@ -49,12 +53,12 @@ export default function Home() {
   const changeNetwork = () => {
     if (network === "mainnet") localStorage.setItem("network", "testnet")
     else localStorage.setItem("network", "mainnet")
-    window.location.reload()
+    reload()
   }
 
   const logOut = () => {
     userSession.signUserOut()
-    window.location.reload()
+    reload()
   }
 
   const getBalances = async () => {
@@ -65,9 +69,10 @@ export default function Home() {
     const btcAddress = loadUserData.profile.btcAddress.p2wpkh[net]
     const _stxBalance = await getSTXBalance(stxAddress, isMainnet)
     const _btcBalance = await getBTCBalance(btcAddress, isMainnet)
-
+    
     setStxBalance(_stxBalance || 0)
     setBtcBalance(_btcBalance || 0)
+    setIsLoading(false)
   }
 
   return (
@@ -81,24 +86,25 @@ export default function Home() {
       <div className={styles.container}>
         <header className={styles.header}>
           <div className={styles.logo}>
+            <Image
+              src={BitLendLogo}
+              alt="BitLend"
+            />
+          </div>
+          {userIsConnected && (
             <div>
-              <Image
-                src={BitLendLogo}
-                alt="BitLend"
-              />
+              <button onClick={changeNetwork} className={styles.network}>{network}</button>
+              <button onClick={logOut} className={styles.disconnectBtn}>Disconnect</button>
             </div>
-          </div>
-          <div>
-            {userIsConnected && (
-              <>
-                <button onClick={changeNetwork} className={styles.network}>{network}</button>
-                <button onClick={logOut} className={styles.disconnectBtn}>Disconnect</button>
-              </>
-            )}
-          </div>
+          )}
         </header>
         <div className={styles.survey}>
-          <a href="https://blocksurvey.io/survey/p/59b98bd3-1fc7-4e3d-ac3d-92b4d1eb9d40/r/o" target="_blank">Complete this brief survey to be added to the waitlist of our beta launch</a>
+          <a 
+            href="https://blocksurvey.io/survey/p/59b98bd3-1fc7-4e3d-ac3d-92b4d1eb9d40/r/o" 
+            target="_blank"
+          >
+            Complete this brief survey to be added to the waitlist of our beta launch
+          </a>
         </div>
         {!userIsConnected && <MainConnect />}
         {userIsConnected &&
@@ -106,7 +112,7 @@ export default function Home() {
             <div className={styles.boxWrapper}>
               <AssetsGroup title="Loaned Assets">
                 <div className={styles.listMessage}>Nothing loaned yet.</div>
-                {false && <>
+                {/* <>
                   <div className={`${styles.listRow} ${styles.listHeader}`}>
                     <div>Assets</div>
                     <div>Balance</div>
@@ -123,7 +129,7 @@ export default function Home() {
                     onLend={() => {}}
                     isWithdraw={true}
                   />
-                </>}
+                </>*/}
               </AssetsGroup>
               <AssetsGroup title="Borrowed Assets">
                 <div className={styles.listMessage}>Nothing borrowed yet.</div>
@@ -145,14 +151,8 @@ export default function Home() {
                     balance={btcBalance}
                     apy="5%"
                     isCollateral={false}
-                    onLend={() => setShowLend({
-                      name: "BTC",
-                      src: bitcoinLogo,
-                      balance: btcBalance,
-                      apy: "5%",
-                      isCollateral: false,
-                      valueDollar: 30000
-                    })}
+                    onLend={() => {}}
+                    isLoading={isLoading}
                     />
                   <AssetsLendItem
                     name="STX"
@@ -160,27 +160,23 @@ export default function Home() {
                     balance={stxBalance}
                     apy="2%"
                     isCollateral={true}
-                    onLend={() => setShowLend({
-                      name: "STX",
-                      src: stacksLogo,
-                      balance: stxBalance,
-                      apy: "2%",
-                      isCollateral: true,
-                      valueDollar: 0.87
-                    })}
+                    onLend={() => {}}
+                    isLoading={isLoading}
                   />
                 </>
               </AssetsGroup>
               <AssetsGroup title="Assets to Borrow">
                 <>
-                  <div className={styles.info}>
-                    <div className={styles.infoIcon}>
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                  {true &&
+                    <div className={styles.info}>
+                      <div className={styles.infoIcon}>
+                        <InfoIcon />
+                      </div>
+                      <div>
+                        To borrow you need to supply an asset to be used as collateral.
+                      </div>
                     </div>
-                    <div>
-                      To borrow you need to supply an asset to be used as collateral.
-                    </div>
-                  </div>
+                  }
                   <div className={`${styles.listRow} ${styles.listHeader}`}>
                     <div>Assets</div>
                     <div>Available</div>
