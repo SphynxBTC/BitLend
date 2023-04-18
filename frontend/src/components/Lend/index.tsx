@@ -14,7 +14,7 @@ type Asset = {
   valueDollar: number
 }
 
-const LendItem = ({ name, src, balance, apy, isCollateral, onClose, onLend, valueDollar }: Asset) => {
+const Lend = ({ name, src, balance, apy, isCollateral, onClose, onLend, valueDollar }: Asset) => {
   const collateral = isCollateral ? "Yes" : "No"
   const collateralClass = isCollateral ? styles.green : styles.red
   const [value, setValue] = useState(0) 
@@ -71,4 +71,4 @@ const LendItem = ({ name, src, balance, apy, isCollateral, onClose, onLend, valu
   )
 }
 
-export default LendItem
+export default Lend
