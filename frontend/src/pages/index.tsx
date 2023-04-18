@@ -151,17 +151,31 @@ export default function Home() {
                     balance={btcBalance}
                     apy="5%"
                     isCollateral={false}
-                    onLend={() => {}}
                     isLoading={isLoading}
-                    />
+                    onLend={() => setShowLend({
+                      name: "BTC",
+                      src: bitcoinLogo,
+                      balance: btcBalance,
+                      apy: "5%",
+                      isCollateral: false,
+                      valueDollar: 30000
+                    })}
+                  />
                   <AssetsLendItem
                     name="STX"
                     src={stacksLogo}
                     balance={stxBalance}
                     apy="2%"
                     isCollateral={true}
-                    onLend={() => {}}
                     isLoading={isLoading}
+                    onLend={() => setShowLend({
+                      name: "STX",
+                      src: stacksLogo,
+                      balance: stxBalance,
+                      apy: "2%",
+                      isCollateral: true,
+                      valueDollar: 0.87
+                    })}
                   />
                 </>
               </AssetsGroup>
