@@ -1,5 +1,6 @@
 import Image from 'next/image'
-import { StaticImageData } from "next/image"
+import { StaticImageData } from 'next/image'
+import Loader from '@components/Loader'
 import styles from './AssetsLendItem.module.css'
 
 type Asset = {
@@ -10,13 +11,14 @@ type Asset = {
   isCollateral: boolean
   onLend: React.MouseEventHandler<HTMLButtonElement>
   isWithdraw?: boolean
+  isLoading?: boolean
 }
 
-const AssetsLendItem = ({ src, name, balance, apy, isCollateral, onLend, isWithdraw }: Asset) => {
+const AssetsLendItem = ({ src, name, balance, apy, isCollateral, onLend, isWithdraw, isLoading }: Asset) => {
   const btnDisabled = balance === 0 ? styles.disabled : ""
   const collateral = isCollateral ? "Yes" : "No"
   const collateralClass = isCollateral ? styles.green : ""
-
+  
   return (
     <div className={styles.listRow}>
       <div className={styles.assetContainer}>
@@ -29,7 +31,10 @@ const AssetsLendItem = ({ src, name, balance, apy, isCollateral, onLend, isWithd
         <div>{name}</div>
       </div>
       <div style={{position: "relative"}}>
-        <div>{balance}</div>
+        <div>
+          {!isLoading && balance}
+          {isLoading && <div><Loader /></div>}
+        </div>
         {isWithdraw && <div style={{position: "absolute", bottom: "-5px", fontSize: 12, color: "#777"}}>$ {balance * 0.88}</div>}
       </div>
       <div className={`${styles.smallCol} ${styles.center}`}>{apy}</div>
