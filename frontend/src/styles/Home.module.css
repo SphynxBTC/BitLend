@@ -125,7 +125,7 @@
 }
 
 .survey a {
-  background-color:limegreen;
+  background-color: #f1975b;
   padding: 12px 16px;
   font-size: 18px;
   color: white;
@@ -137,7 +137,7 @@
 }
 
 .survey a:hover {
-  background-color:mediumseagreen;
+  background-color:#e18447;
 }
 
 @media (min-width: 940px) {
